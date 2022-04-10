@@ -20,10 +20,7 @@ media
 
 # C extensions
 *.so
-*.h5
 
-
-*.h5
 
 # Distribution / packaging
 .Python
