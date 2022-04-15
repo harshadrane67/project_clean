@@ -1,4 +1,6 @@
 from PIL import Image
+import requests
+from io import BytesIO
 from numpy import *
 import numpy as np
 import keras
@@ -8,14 +10,16 @@ import math
 
 def gri_severity(gri_img,category):
     #gri_img = CloudinaryImage(gri_img).image( format = "png")
-    gri_img = Image.open(gri_img,mode='r', formats=None)
+    response = requests.get(gri_img.url)
+    gri_img = Image.open(BytesIO(response.content))
     print(gri_img)
     gri_gray_img = gri_img.resize((200,200)).convert('L') #resize and convert to gray scale
     gri_gray_img_matrix = array([array(gri_gray_img).flatten()],'f')
     gri_gray_img_matrix = gri_gray_img_matrix.reshape(gri_gray_img_matrix.shape[0],200,200,1).astype('float32')
     gri_gray_img_matrix = gri_gray_img_matrix / 255
     if category == "Garbage":
-        garbage_severity_model = keras.models.load_model("ml_models/garbage_severity.h5")
+        garbage_severity_model = keras.models.load_model("ml_models/garbage_reduce_severity.h5")
+        garbage_severity_model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
         severity = garbage_severity_model.predict(gri_gray_img_matrix)
         severity = np.argmax(severity[0])
     elif category == "POTHOLE":

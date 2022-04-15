@@ -75,11 +75,14 @@ def create_gri(request,*args, **kwargs):
         return Response(gri_serializer.errors)
     #return Response(data={"status":"OK"})
 
+
+
 @api_view(['GET'])
 def get_severity(request,*args, **kwargs):
-    gri_obj = Grievance.objects.get(id=4)
-    priority = gri_priority(gri_obj)
-    severity = gri_severity(gri_obj.gri_img,"Garbage")
+    gri_obj = Grievance.objects.get(id=57)
+    print(gri_obj.gri_img.url)
+    # priority = gri_priority(gri_obj)
+    # severity = gri_severity(gri_obj.gri_img,"Garbage")
     return Response(data={"severity":0,"priority":0,"gri_bj":str(gri_obj)})
 
 
