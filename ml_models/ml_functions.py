@@ -18,22 +18,25 @@ def gri_severity(gri_img,category):
     gri_gray_img_matrix = gri_gray_img_matrix.reshape(gri_gray_img_matrix.shape[0],200,200,1).astype('float32')
     gri_gray_img_matrix = gri_gray_img_matrix / 255
     if category == "Garbage":
+        severity = 0
         garbage_severity_model = keras.models.load_model("ml_models/garbage_reduce_severity.h5")
         garbage_severity_model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
         severity = garbage_severity_model.predict(gri_gray_img_matrix)
         severity = np.argmax(severity[0])
     elif category == "POTHOLE":
-        print("No ML model for given category, default severity will: 0")
+        #print("No ML model for given category, default severity will: 0")
         severity = 0
-        # pothole_severity_model = keras.models.load_model("ml_models/pothole_severity.h5")
-        # severity = pothole_severity_model.predict(gri_gray_img_matrix)
-        # severity = np.argmax(severity[0])
+        pothole_severity_model = keras.models.load_model("ml_models/pothole_reduce_severity.h5")
+        pothole_severity_model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+        severity = pothole_severity_model.predict(gri_gray_img_matrix)
+        severity = np.argmax(severity[0])
     elif category == "Fallen Tree":
-        print("No ML model for given category, default severity will: 0")
+        #print("No ML model for given category, default severity will: 0")
         severity = 0
-        # FallenTree_severity_model = keras.models.load_model("ml_models/fallenTree_severity.h5")
-        # severity = FallenTree_severity_model.predict(gri_gray_img_matrix)
-        # severity = np.argmax(severity[0])
+        FallenTree_severity_model = keras.models.load_model("ml_models/fallenTree_reduce_severity.h5")
+        FallenTree_severity_model.compile(optimizer='adam',loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+        severity = FallenTree_severity_model.predict(gri_gray_img_matrix)
+        severity = np.argmax(severity[0])
     else:
         print("No ML model for given category, default severity will: 0")
         severity = 0
